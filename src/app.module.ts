@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
 import { CommunityModule } from './community/community.module';
+import { DocumentsModule } from './documents/documents.module';
 import { databaseConfig } from './config/database.config';
 import * as mongoose from 'mongoose';
 
@@ -24,6 +25,7 @@ mongoose.connection.on('error', (err) => {
     AuthModule,
     ChatsModule,
     CommunityModule,
+    DocumentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
