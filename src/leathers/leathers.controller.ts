@@ -15,8 +15,10 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { LeathersService } from './leathers.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
 
 @Controller('leathers')
+@UseGuards(JwtAuthGuard, SuperAdminGuard)
 export class LeathersController {
     constructor(
         private readonly leathersService: LeathersService,
@@ -24,7 +26,6 @@ export class LeathersController {
     ) { }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('images'))
     async create(
         @Body() createLeatherDto: { title: string; description: string; category: string },
@@ -60,7 +61,6 @@ export class LeathersController {
     }
 
     @Patch(':id')
-    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('images'))
     async update(
         @Param('id') id: string,
@@ -86,7 +86,6 @@ export class LeathersController {
     }
 
     @Delete(':id')
-    @UseGuards(JwtAuthGuard)
     remove(@Param('id') id: string) {
         return this.leathersService.remove(id);
     }

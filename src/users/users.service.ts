@@ -16,8 +16,10 @@ export class UsersService {
     firstName: string;
     lastName: string;
     username: string;
+    role: string;
+    departmentId?: string;
   }): Promise<User> {
-    const { email, password, firstName, lastName, username } = createUserDto;
+    const { email, password, firstName, lastName, username, role, departmentId } = createUserDto;
 
     // Check if user already exists
     const existingUser = await this.userModel.findOne({ $or: [{ email }, { username }] });
@@ -36,6 +38,8 @@ export class UsersService {
       firstName,
       lastName,
       username,
+      role,
+      departmentId,
     });
 
     const savedUser = await newUser.save();

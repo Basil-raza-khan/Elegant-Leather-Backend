@@ -15,8 +15,10 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
 
 @Controller('products')
+@UseGuards(JwtAuthGuard, SuperAdminGuard)
 export class ProductsController {
     constructor(
         private readonly productsService: ProductsService,
@@ -24,7 +26,6 @@ export class ProductsController {
     ) { }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('images'))
     async create(
         @Body() createProductDto: { title: string; description: string; category: string },
@@ -60,7 +61,6 @@ export class ProductsController {
     }
 
     @Patch(':id')
-    @UseGuards(JwtAuthGuard)
     @UseInterceptors(FilesInterceptor('images'))
     async update(
         @Param('id') id: string,
@@ -86,7 +86,6 @@ export class ProductsController {
     }
 
     @Delete(':id')
-    @UseGuards(JwtAuthGuard)
     remove(@Param('id') id: string) {
         return this.productsService.remove(id);
     }
