@@ -3,11 +3,13 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './schemas/user.schema';
+import { Department, DepartmentDocument } from '../departments/schemas/department.schema';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Department.name) private departmentModel: Model<DepartmentDocument>,
   ) {}
 
   async create(createUserDto: {
@@ -44,6 +46,12 @@ export class UsersService {
 
     const savedUser = await newUser.save();
     console.log('User created:', savedUser._id);
+
+    // If this is a department admin, update the department's assignedTo field
+    if (role === 'DEPT_ADMIN' && departmentId) {
+      await this.departmentModel.findByIdAndUpdate(departmentId, { assignedTo: savedUser._id });
+    }
+
     return savedUser;
   }
 

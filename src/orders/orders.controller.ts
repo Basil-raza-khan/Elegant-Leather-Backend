@@ -62,9 +62,9 @@ export class OrdersController {
   }
 
   @Patch(':id/assign')
-  async assignToDepartment(@Param('id') id: string, @Body() assignDto: { departmentId: string; assignedTo: string }, @Request() req) {
+  async assignToDepartment(@Param('id') id: string, @Body() assignDto: { departmentId: string }, @Request() req) {
     const oldOrder = await this.ordersService.findOne(id);
-    const updatedOrder = await this.ordersService.assignToDepartment(id, assignDto.departmentId, assignDto.assignedTo);
+    const updatedOrder = await this.ordersService.assignToDepartment(id, assignDto.departmentId);
     await this.auditLogsService.logAction({
       userId: req.user.userId,
       action: 'UPDATE',

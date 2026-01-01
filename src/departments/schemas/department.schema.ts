@@ -10,6 +10,9 @@ export class Department {
 
   @Prop({ type: String, ref: 'User', required: true })
   createdBy: string; // Super Admin ID
+
+  @Prop({ type: String, ref: 'User' })
+  assignedTo: string; // Department head (DEPT_ADMIN) ID
 }
 
 export const DepartmentSchema = SchemaFactory.createForClass(Department);

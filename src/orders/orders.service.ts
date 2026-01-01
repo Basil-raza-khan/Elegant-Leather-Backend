@@ -34,8 +34,8 @@ export class OrdersService {
     return this.orderModel.findByIdAndUpdate(id, updateData, { new: true }).exec();
   }
 
-  async assignToDepartment(id: string, departmentId: string, assignedTo: string): Promise<Order | null> {
-    return this.orderModel.findByIdAndUpdate(id, { currentDepartment: departmentId, assignedTo }, { new: true }).exec();
+  async assignToDepartment(id: string, departmentId: string): Promise<Order | null> {
+    return this.orderModel.findByIdAndUpdate(id, { currentDepartment: departmentId, assignedTo: null }, { new: true }).exec();
   }
 
   async remove(id: string): Promise<void> {

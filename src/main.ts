@@ -25,7 +25,7 @@ async function bootstrap() {
     // For Vercel serverless, return the Express instance
     return app.getHttpAdapter().getInstance();
   } else {
-    const port = process.env.PORT ?? 3000;
+    const port = process.env.PORT ?? 4000;
     await app.listen(port, '0.0.0.0');
 
     console.log(`🚀 Application is running on: http://localhost:${port}`);

@@ -15,11 +15,11 @@ export class DepartmentsService {
   }
 
   async findAll(): Promise<Department[]> {
-    return this.departmentModel.find().exec();
+    return this.departmentModel.find().populate('assignedTo', 'email firstName lastName').exec();
   }
 
   async findOne(id: string): Promise<Department | null> {
-    return this.departmentModel.findById(id).exec();
+    return this.departmentModel.findById(id).populate('assignedTo', 'email firstName lastName').exec();
   }
 
   async update(id: string, name: string): Promise<Department | null> {

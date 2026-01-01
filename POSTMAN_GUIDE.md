@@ -43,7 +43,7 @@ This guide provides complete API integration specifications for the Elegant Leat
 - `400`: Missing required fields
 
 **Frontend Implementation**:
-- Store JWT token in secure storage (localStorage/httpOnly cookie)
+- Store JWT token in secure storage (localStorage/httpOnly cookie) use zustand 
 - Include token in all subsequent requests: `Authorization: Bearer <token>`
 - Handle token expiration (401 responses) by redirecting to login
 
@@ -219,7 +219,12 @@ This guide provides complete API integration specifications for the Elegant Leat
     "id": "string",
     "name": "string",
     "createdAt": "string",
-    "updatedAt": "string"
+    "updatedAt": "string",
+    "assignedTo": {
+      "email": "string",
+      "firstName": "string",
+      "lastName": "string"
+    } | null
   }
 ]
 ```
@@ -404,12 +409,15 @@ This guide provides complete API integration specifications for the Elegant Leat
 **Request Body**:
 ```json
 {
-  "departmentId": "string", // Required
-  "assignedTo": "string" // Optional: User ID to assign to
+  "departmentId": "string" // Required: Department ID to assign the order to
 }
 ```
 
+**Response (200)**: Updated order object with `currentDepartment` set and `assignedTo` set to null
+
 **Access Control**: Super Admin only
+
+**Note**: This assigns the order to a department. Department admins can later claim the order by updating their assigned orders.
 
 ### Delete Order
 **Endpoint**: `DELETE /orders/:id`
