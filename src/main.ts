@@ -26,23 +26,21 @@ async function bootstrap() {
   // Enable Socket.IO adapter
   app.useWebSocketAdapter(new IoAdapter(app));
 
+  return app.getHttpAdapter().getInstance();
+}
+
+// Initialize the app
+(async () => {
+  const app = await bootstrap();
   if (process.env.VERCEL) {
-    // For Vercel serverless, return the Express instance
-    return app.getHttpAdapter().getInstance();
+    module.exports = app;
   } else {
     const port = process.env.PORT ?? 4000;
-    await app.listen(port, '0.0.0.0');
-
-    console.log(`🚀 Application is running on: http://localhost:${port}`);
-    console.log(`🚀 Application is accessible at: http://0.0.0.0:${port}`);
-    console.log(`🔌 Socket.IO server is ready`);
+    app.listen(port, '0.0.0.0', () => {
+      console.log(`🚀 Application is running on: http://localhost:${port}`);
+      console.log(`🚀 Application is accessible at: http://0.0.0.0:${port}`);
+      console.log(`🔌 Socket.IO server is ready`);
+    });
   }
-}
-
-// For serverless deployment
-if (process.env.VERCEL) {
-  module.exports = bootstrap();
-} else {
-  bootstrap();
-}
+})();
 
