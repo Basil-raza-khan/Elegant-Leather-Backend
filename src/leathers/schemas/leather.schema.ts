@@ -46,6 +46,30 @@ export class Leather {
         images: MediaSection;
         videos: MediaSection;
     };
+
+    @Prop()
+    weightRange?: string;
+
+    @Prop()
+    temper?: string;
+
+    @Prop()
+    oilContent?: string;
+
+    @Prop()
+    leatherType?: string;
+
+    @Prop()
+    texture?: string;
+
+    @Prop()
+    grading?: string;
+
+    @Prop()
+    finish?: string;
+
+    @Prop()
+    collections?: string;
 }
 
 export const LeatherSchema = SchemaFactory.createForClass(Leather);

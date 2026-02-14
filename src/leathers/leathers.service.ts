@@ -15,6 +15,14 @@ export class LeathersService {
         category: string;
         tags?: string[];
         media: any;
+        weightRange?: string;
+        temper?: string;
+        oilContent?: string;
+        leatherType?: string;
+        texture?: string;
+        grading?: string;
+        finish?: string;
+        collections?: string;
     }): Promise<Leather> {
         const createdLeather = new this.leatherModel(createLeatherDto);
         return createdLeather.save();
@@ -42,6 +50,14 @@ export class LeathersService {
         category: string;
         tags?: string[];
         media: any;
+        weightRange?: string;
+        temper?: string;
+        oilContent?: string;
+        leatherType?: string;
+        texture?: string;
+        grading?: string;
+        finish?: string;
+        collections?: string;
     }>): Promise<Leather | null> {
         return this.leatherModel.findByIdAndUpdate(id, updateLeatherDto, { new: true }).exec();
     }

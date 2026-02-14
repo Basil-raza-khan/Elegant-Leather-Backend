@@ -29,4 +29,36 @@ export class CreateLeatherDto {
     @IsString({ each: true })
     @IsOptional()
     tags?: string[];
+
+    @IsString()
+    @IsOptional()
+    weightRange?: string;
+
+    @IsString()
+    @IsOptional()
+    temper?: string;
+
+    @IsString()
+    @IsOptional()
+    oilContent?: string;
+
+    @IsString()
+    @IsOptional()
+    leatherType?: string;
+
+    @IsString()
+    @IsOptional()
+    texture?: string;
+
+    @IsString()
+    @IsOptional()
+    grading?: string;
+
+    @IsString()
+    @IsOptional()
+    finish?: string;
+
+    @IsString()
+    @IsOptional()
+    collections?: string;
 }
