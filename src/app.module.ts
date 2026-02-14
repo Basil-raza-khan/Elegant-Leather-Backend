@@ -12,6 +12,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 import { MediaModule } from './media/media.module';
 import { ContactUsModule } from './contact-us/contact-us.module';
 import { TeamModule } from './team/team.module';
+import { TestimonialsModule } from './testimonials/testimonials.module';
 import { databaseConfig } from './config/database.config';
 
 @Module({
@@ -27,6 +28,7 @@ import { databaseConfig } from './config/database.config';
     MediaModule,
     ContactUsModule,
     TeamModule,
+    TestimonialsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

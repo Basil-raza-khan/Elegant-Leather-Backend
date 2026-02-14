@@ -1,0 +1,1313 @@
+{
+  "info": {
+    "_postman_id": "310fcbed-85c5-424a-8eb9-279f28474c54",
+    "name": "Elegant Leather",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40106202"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"samicshakeel@elegantleather.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login Copy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"samicshakeel@elegantleather.com\",\r\n    \"password\": \"password\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:4000/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "leather",
+      "item": [
+        {
+          "name": "create leather",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Classic Brown",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Fine quality leather",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "belts",
+                  "type": "text"
+                },
+                {
+                  "key": "tags",
+                  "value": "premium",
+                  "type": "text"
+                },
+                {
+                  "key": "tags",
+                  "value": "brown",
+                  "type": "text"
+                },
+                {
+                  "key": "images_main",
+                  "type": "file",
+                  "src": "ZxuUNb95C/Screenshot_20260107-233137.jpg"
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "src": "_-cCFsJQ5/front1.jpeg"
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "src": "yf4Ypz0WR/front2.jpeg"
+                },
+                {
+                  "key": "images[variants][0][videos][]",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "videos_main",
+                  "type": "file",
+                  "src": "aYCzvABVO/IMG_8121.MP4"
+                },
+                {
+                  "key": "videos_variants_0_videos",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/leathers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all leathers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/leathers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get leathers by category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/leathers/category/{{category}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers",
+                "category",
+                "{{category}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get leather by id",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/leathers/{{leatherId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers",
+                "{{leatherId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update leather",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Updated Classic Brown",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated fine quality leather",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "belts",
+                  "type": "text"
+                },
+                {
+                  "key": "tags[]",
+                  "value": "premium",
+                  "type": "text"
+                },
+                {
+                  "key": "tags[]",
+                  "value": "updated",
+                  "type": "text"
+                },
+                {
+                  "key": "images_main",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "images_variants_0_videos",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "videos_main",
+                  "type": "file",
+                  "value": null
+                },
+                {
+                  "key": "videos_variants_0_videos",
+                  "type": "file",
+                  "value": null
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/leathers/{{leatherId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers",
+                "{{leatherId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete leather",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/leathers/{{leatherId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "leathers",
+                "{{leatherId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "product",
+      "item": [
+        {
+          "name": "create product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Classic Product",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "belts",
+                  "type": "text"
+                },
+                {
+                  "key": "tags[]",
+                  "value": "premium",
+                  "type": "text"
+                },
+                {
+                  "key": "tags[]",
+                  "value": "brown",
+                  "type": "text"
+                },
+                {
+                  "key": "images_main",
+                  "type": "file",
+                  "src": "9-hcQwRAE/portal.biek.edu.pk_ENRL(Pixel 7).png"
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "src": "dE2rHKOt-/front2.jpeg"
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "src": "Gu2IkCBV5/front2.jpeg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/products",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all products",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/products",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get products by category",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/products/category/{{category}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "products",
+                "category",
+                "{{category}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get product by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/auth/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "auth",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Updated Product",
+                  "type": "text"
+                },
+                {
+                  "key": "category",
+                  "value": "belts",
+                  "type": "text"
+                },
+                {
+                  "key": "tags[]",
+                  "value": "updated",
+                  "type": "text"
+                },
+                {
+                  "key": "images_main",
+                  "type": "file",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "images_variants_0_images",
+                  "type": "file",
+                  "src": "XN7dmERZ8/front1.jpeg"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/products/{{productId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete product",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/products/{{productId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "team",
+      "item": [
+        {
+          "name": "create team member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fullName",
+                  "value": "John Doe",
+                  "type": "text"
+                },
+                {
+                  "key": "position",
+                  "value": "Senior UI/UX Designer",
+                  "type": "text"
+                },
+                {
+                  "key": "linkedinLink",
+                  "value": "https://linkedin.com/in/johndoe",
+                  "type": "text"
+                },
+                {
+                  "key": "message",
+                  "value": "Passionate about creating beautiful user experiences",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/team",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all team members",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/team",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get team member by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/team/{{teamId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team",
+                "{{teamId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update team member",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "fullName",
+                  "value": "John Doe Updated",
+                  "type": "text"
+                },
+                {
+                  "key": "position",
+                  "value": "Lead Designer",
+                  "type": "text"
+                },
+                {
+                  "key": "linkedinLink",
+                  "value": "https://linkedin.com/in/johndoe",
+                  "type": "text"
+                },
+                {
+                  "key": "message",
+                  "value": "Updated message",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/team/{{teamId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team",
+                "{{teamId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete team member (soft)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/team/{{teamId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team",
+                "{{teamId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete team member (permanent)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:4000/api/team/{{teamId}}/permanent",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team",
+                "{{teamId}}",
+                "permanent"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get team count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/team/count/total",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "team",
+                "count",
+                "total"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "testimonials",
+      "item": [
+        {
+          "name": "create testimonial",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "clientName",
+                  "value": "Ahmed Hassan",
+                  "type": "text"
+                },
+                {
+                  "key": "message",
+                  "value": "Amazing quality leather products!",
+                  "type": "text"
+                },
+                {
+                  "key": "country",
+                  "value": "UAE",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all testimonials",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get testimonial by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials/{{testimonialId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials",
+                "{{testimonialId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update testimonial",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "clientName",
+                  "value": "Ahmed Hassan Updated",
+                  "type": "text"
+                },
+                {
+                  "key": "message",
+                  "value": "Updated testimonial message",
+                  "type": "text"
+                },
+                {
+                  "key": "country",
+                  "value": "UAE",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials/{{testimonialId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials",
+                "{{testimonialId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete testimonial (soft)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials/{{testimonialId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials",
+                "{{testimonialId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete testimonial (permanent)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials/{{testimonialId}}/permanent",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials",
+                "{{testimonialId}}",
+                "permanent"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get testimonials count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/testimonials/count/total",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "testimonials",
+                "count",
+                "total"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "categories",
+      "item": [
+        {
+          "name": "create category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Premium Leather",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "High-quality leather items",
+                  "type": "text"
+                },
+                {
+                  "key": "videoUrl",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "video",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/categories",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/categories",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get category by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/categories/{{categoryId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update category",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "title",
+                  "value": "Premium Leather Updated",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Updated category description",
+                  "type": "text"
+                },
+                {
+                  "key": "videoUrl",
+                  "value": "",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "video",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:4000/api/categories/{{categoryId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete category (soft)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/categories/{{categoryId}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete category (permanent)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/categories/{{categoryId}}/permanent",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories",
+                "{{categoryId}}",
+                "permanent"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get categories count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:4000/api/categories/count/total",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "4000",
+              "path": [
+                "api",
+                "categories",
+                "count",
+                "total"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "teamId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "testimonialId",
+      "value": "",
+      "type": "default"
+    },
+    {
+      "key": "categoryId",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}

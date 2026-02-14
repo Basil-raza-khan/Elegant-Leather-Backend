@@ -1,41 +1,105 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UploadedFiles,
+  BadRequestException,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CategoriesService } from './categories.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
+import { CreateCategoryDto } from './dto/create-category.dto';
+import { UpdateCategoryDto } from './dto/update-category.dto';
 
 @Controller('categories')
-@UseGuards(JwtAuthGuard, SuperAdminGuard)
 export class CategoriesController {
-    constructor(
-        private readonly categoriesService: CategoriesService
-    ) { }
+  constructor(private readonly categoriesService: CategoriesService) {}
 
-    @Post()
-    async create(@Body() createCategoryDto: { name: string; description?: string }, @Request() req) {
-        const category = await this.categoriesService.create(createCategoryDto);
-        return category;
+  @Post()
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'image', maxCount: 1 },
+        { name: 'video', maxCount: 1 },
+      ],
+      {
+        limits: { fileSize: 100 * 1024 * 1024 },
+      },
+    ),
+  )
+  async create(
+    @Body() createCategoryDto: CreateCategoryDto,
+    @UploadedFiles()
+    files: { image?: Express.Multer.File[]; video?: Express.Multer.File[] },
+  ) {
+    if (!files.image || files.image.length === 0) {
+      throw new BadRequestException('Image file is required');
     }
 
-    @Get()
-    findAll() {
-        return this.categoriesService.findAll();
-    }
+    return this.categoriesService.create(
+      createCategoryDto,
+      files.image[0],
+      files.video ? files.video[0] : undefined,
+    );
+  }
 
-    @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.categoriesService.findOne(id);
-    }
+  @Get()
+  async findAll() {
+    return this.categoriesService.findAll();
+  }
 
-    @Patch(':id')
-    async update(@Param('id') id: string, @Body() updateCategoryDto: { name?: string; description?: string }, @Request() req) {
-        const oldCategory = await this.categoriesService.findOne(id);
-        const updatedCategory = await this.categoriesService.update(id, updateCategoryDto);
-        return updatedCategory;
-    }
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.categoriesService.findOne(id);
+  }
 
-    @Delete(':id')
-    async remove(@Param('id') id: string, @Request() req) {
-        const oldCategory = await this.categoriesService.findOne(id);
-        await this.categoriesService.remove(id);
-    }
+  @Patch(':id')
+  @UseInterceptors(
+    FileFieldsInterceptor(
+      [
+        { name: 'image', maxCount: 1 },
+        { name: 'video', maxCount: 1 },
+      ],
+      {
+        limits: { fileSize: 100 * 1024 * 1024 },
+      },
+    ),
+  )
+  async update(
+    @Param('id') id: string,
+    @Body() updateCategoryDto: UpdateCategoryDto,
+    @UploadedFiles()
+    files?: { image?: Express.Multer.File[]; video?: Express.Multer.File[] },
+  ) {
+    return this.categoriesService.update(
+      id,
+      updateCategoryDto,
+      files?.image ? files.image[0] : undefined,
+      files?.video ? files.video[0] : undefined,
+    );
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async remove(@Param('id') id: string) {
+    return this.categoriesService.remove(id);
+  }
+
+  @Delete(':id/permanent')
+  @HttpCode(HttpStatus.OK)
+  async hardDelete(@Param('id') id: string) {
+    return this.categoriesService.hardDelete(id);
+  }
+
+  @Get('count/total')
+  async getCount() {
+    const count = await this.categoriesService.count();
+    return { count };
+  }
 }

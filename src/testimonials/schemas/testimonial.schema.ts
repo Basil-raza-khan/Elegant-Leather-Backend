@@ -1,15 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-export type CategoryDocument = Category & Document;
+export type TestimonialDocument = Testimonial & Document;
 
 @Schema({ timestamps: true })
-export class Category {
+export class Testimonial {
   @Prop({ required: true })
-  title: string;
+  clientName: string;
 
   @Prop({ required: true })
-  description: string;
+  message: string;
+
+  @Prop({ required: true })
+  country: string;
 
   @Prop({ required: true })
   imageUrl: string;
@@ -17,14 +20,8 @@ export class Category {
   @Prop({ required: true })
   imagePublicId: string;
 
-  @Prop()
-  videoUrl?: string;
-
-  @Prop()
-  videoPublicId?: string;
-
   @Prop({ default: true })
   isActive: boolean;
 }
 
-export const CategorySchema = SchemaFactory.createForClass(Category);
+export const TestimonialSchema = SchemaFactory.createForClass(Testimonial);
