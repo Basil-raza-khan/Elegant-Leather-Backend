@@ -13,6 +13,7 @@ export class LogsController {
     return this.logsService.getLogs(page, limit);
   }
 
+  @Delete(':id')
   @UseGuards(JwtAuthGuard, AdminGuard)
   async deleteLog(@Param('id') id: string) {
     await this.logsService.deleteLog(id);
