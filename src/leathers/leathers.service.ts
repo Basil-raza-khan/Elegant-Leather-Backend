@@ -2,11 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Leather, LeatherDocument } from './schemas/leather.schema';
+import { LogsService } from '../logs/logs.service';
 
 @Injectable()
 export class LeathersService {
     constructor(
         @InjectModel(Leather.name) private leatherModel: Model<LeatherDocument>,
+        private logsService: LogsService,
     ) { }
 
     async create(createLeatherDto: {
@@ -23,9 +25,11 @@ export class LeathersService {
         grading?: string;
         finish?: string;
         collections?: string;
-    }): Promise<Leather> {
+    }, userId: string): Promise<Leather> {
         const createdLeather = new this.leatherModel(createLeatherDto);
-        return createdLeather.save();
+        const savedLeather = await createdLeather.save();
+        await this.logsService.createLog('create', 'leather', (savedLeather._id as any).toString(), userId, null, (savedLeather as any).toObject());
+        return savedLeather;
     }
 
     async count(): Promise<number> {
@@ -58,11 +62,20 @@ export class LeathersService {
         grading?: string;
         finish?: string;
         collections?: string;
-    }>): Promise<Leather | null> {
-        return this.leatherModel.findByIdAndUpdate(id, updateLeatherDto, { new: true }).exec();
+    }>, userId: string): Promise<Leather | null> {
+        const oldLeather = await this.leatherModel.findById(id).exec();
+        const updatedLeather = await this.leatherModel.findByIdAndUpdate(id, updateLeatherDto, { new: true }).exec();
+        if (updatedLeather) {
+            await this.logsService.createLog('update', 'leather', id, userId, oldLeather?.toObject(), updatedLeather.toObject());
+        }
+        return updatedLeather;
     }
 
-    async remove(id: string): Promise<Leather | null> {
-        return this.leatherModel.findByIdAndDelete(id).exec();
+    async remove(id: string, userId: string): Promise<Leather | null> {
+        const deletedLeather = await this.leatherModel.findByIdAndDelete(id).exec();
+        if (deletedLeather) {
+            await this.logsService.createLog('delete', 'leather', id, userId, deletedLeather.toObject(), null);
+        }
+        return deletedLeather;
     }
 }

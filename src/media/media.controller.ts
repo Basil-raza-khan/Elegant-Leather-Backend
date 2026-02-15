@@ -2,6 +2,7 @@ import { Controller, Post, UseGuards, UseInterceptors, UploadedFiles, BadRequest
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminGuard } from 'src/auth/guards/admin.guard';
 
 @Controller('media')
 @UseGuards(JwtAuthGuard)
@@ -9,6 +10,7 @@ export class MediaController {
   constructor(private readonly cloudinaryService: CloudinaryService) {}
 
   @Post('upload')
+    // @UseGuards(JwtAuthGuard, AdminGuard)
   @UseInterceptors(AnyFilesInterceptor({
     limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   }))

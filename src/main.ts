@@ -11,7 +11,7 @@ let serverInstance: any = null;
 
 async function createServer() {
   const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn'],
+    logger: ['error', 'warn' , 'debug', 'log', 'verbose'],
   });
 
   // app.useGlobalPipes(new ValidationPipe());

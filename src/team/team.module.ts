@@ -4,11 +4,13 @@ import { TeamService } from './team.service';
 import { TeamController } from './team.controller';
 import { Team, TeamSchema } from './schemas/team.schema';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
+import { LogsModule } from '../logs/logs.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Team.name, schema: TeamSchema }]),
     CloudinaryModule,
+    LogsModule,
   ],
   controllers: [TeamController],
   providers: [TeamService],

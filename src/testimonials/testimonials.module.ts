@@ -4,11 +4,13 @@ import { TestimonialsService } from './testimonials.service';
 import { TestimonialsController } from './testimonials.controller';
 import { Testimonial, TestimonialSchema } from './schemas/testimonial.schema';
 import { CloudinaryModule } from '../cloudinary/cloudinary.module';
+import { LogsModule } from '../logs/logs.module';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Testimonial.name, schema: TestimonialSchema }]),
     CloudinaryModule,
+    LogsModule,
   ],
   controllers: [TestimonialsController],
   providers: [TestimonialsService],

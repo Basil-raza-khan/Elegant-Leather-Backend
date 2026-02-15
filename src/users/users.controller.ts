@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminGuard } from '../auth/guards/admin.guard';
 import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
 import { User, UserRole } from './schemas/user.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -25,6 +26,7 @@ export class UsersController {
   ) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: { email: string; password: string; firstName: string; lastName: string; username: string; role: UserRole; departmentId: string }, @Request() req) {
     const user = await this.usersService.create(createUserDto);
@@ -42,6 +44,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @UsePipes(new ValidationPipe())
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @Request() req) {
     const oldUser = await this.usersService.findById(id);
@@ -51,6 +54,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, AdminGuard)
   async remove(@Param('id') id: string, @Request() req) {
     const oldUser = await this.usersService.findById(id);
     if (!oldUser) throw new Error('User not found');

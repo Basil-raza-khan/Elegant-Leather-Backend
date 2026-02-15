@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsArray, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsString, IsOptional, IsArray, IsNotEmpty, IsNumber, IsObject } from 'class-validator';
 
 export class CreateLeatherDto {
     @IsString()
@@ -29,6 +29,10 @@ export class CreateLeatherDto {
     @IsString({ each: true })
     @IsOptional()
     tags?: string[];
+
+    @IsObject()
+    @IsOptional()
+    media?: any;
 
     @IsString()
     @IsOptional()

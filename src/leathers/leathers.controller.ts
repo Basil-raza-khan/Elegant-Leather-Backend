@@ -12,6 +12,8 @@ import {
   BadRequestException,
   Request,
   NotFoundException,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { LeathersService } from './leathers.service';
@@ -19,6 +21,7 @@ import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { SuperAdminGuard } from '../auth/guards/super-admin.guard';
 import { CreateLeatherDto } from './dto/create-leather.dto';
+import { AdminGuard } from '../auth/guards/admin.guard';
 
 @Controller('leathers')
 export class LeathersController {
@@ -37,127 +40,137 @@ export class LeathersController {
   }
 
   @Post()
-  // @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(AnyFilesInterceptor({
     limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   }))
   async create(
     @Request() req,
     @Body() createLeatherDto: CreateLeatherDto,
-    @UploadedFiles() uploadedFiles: Express.Multer.File[],
+    @UploadedFiles() uploadedFiles?: Express.Multer.File[],
   ) {
-    if (!uploadedFiles || uploadedFiles.length === 0) {
-      throw new BadRequestException('No files uploaded');
-    }
+    let media = createLeatherDto.media;
 
-    const files = this.groupFiles(uploadedFiles);
+    // If files are uploaded, process them
+    if (uploadedFiles && uploadedFiles.length > 0) {
+      if (!uploadedFiles || uploadedFiles.length === 0) {
+        throw new BadRequestException('No files uploaded');
+      }
 
-    const media = {
-      images: {
-        main: null as any,
-        variants: [] as { images: any[]; videos: any[] }[],
-      },
-      videos: {
-        main: null as any,
-        variants: [] as { videos: any[] }[],
-      },
-    };
+      const files = this.groupFiles(uploadedFiles);
 
-    /* =========================
-       MAIN IMAGE (REQUIRED)
-    ========================== */
-    const mainImageFiles = files['images_main'];
-    if (!mainImageFiles || mainImageFiles.length === 0) {
-      throw new BadRequestException('Main image is required');
-    }
+      media = {
+        images: {
+          main: null as any,
+          variants: [] as { images: any[]; videos: any[] }[],
+        },
+        videos: {
+          main: null as any,
+          variants: [] as { videos: any[] }[],
+        },
+      };
 
-    media.images.main = await this.cloudinaryService.uploadImage(
-      mainImageFiles[0],
-    );
+      /* =========================
+         MAIN IMAGE (REQUIRED)
+      ========================== */
+      const mainImageFiles = files['images_main'];
+      if (!mainImageFiles || mainImageFiles.length === 0) {
+        throw new BadRequestException('Main image is required');
+      }
 
-    /* =========================
-       MAIN VIDEO (OPTIONAL)
-    ========================== */
-    const mainVideoFiles = files['videos_main'];
-    if (mainVideoFiles && mainVideoFiles.length > 0) {
-      media.videos.main = await this.cloudinaryService.uploadVideo(
-        mainVideoFiles[0],
+      media.images.main = await this.cloudinaryService.uploadImage(
+        mainImageFiles[0],
       );
-    }
 
-    /* =========================
-       VARIANTS (DYNAMIC)
-    ========================== */
-    const variantIndices = new Set<number>();
+      /* =========================
+         MAIN VIDEO (OPTIONAL)
+      ========================== */
+      const mainVideoFiles = files['videos_main'];
+      if (mainVideoFiles && mainVideoFiles.length > 0) {
+        media.videos.main = await this.cloudinaryService.uploadVideo(
+          mainVideoFiles[0],
+        );
+      }
 
-    for (const fieldname of Object.keys(files)) {
-      let match: RegExpMatchArray | null;
+      /* =========================
+         VARIANTS (DYNAMIC)
+      ========================== */
+      const variantIndices = new Set<number>();
 
-      // images_variants_{i}_images
-      match = fieldname.match(/^images_variants_(\d+)_images$/);
-      if (match) {
-        const idx = Number(match[1]);
-        variantIndices.add(idx);
+      for (const fieldname of Object.keys(files)) {
+        let match: RegExpMatchArray | null;
 
-        if (!media.images.variants[idx]) {
-          media.images.variants[idx] = { images: [], videos: [] };
+        // images_variants_{i}_images
+        match = fieldname.match(/^images_variants_(\d+)_images$/);
+        if (match) {
+          const idx = Number(match[1]);
+          variantIndices.add(idx);
+
+          if (!media.images.variants[idx]) {
+            media.images.variants[idx] = { images: [], videos: [] };
+          }
+
+          media.images.variants[idx].images =
+            await this.cloudinaryService.uploadMultipleImages(files[fieldname]);
         }
 
-        media.images.variants[idx].images =
-          await this.cloudinaryService.uploadMultipleImages(files[fieldname]);
-      }
+        // images_variants_{i}_videos
+        match = fieldname.match(/^images_variants_(\d+)_videos$/);
+        if (match) {
+          const idx = Number(match[1]);
+          variantIndices.add(idx);
 
-      // images_variants_{i}_videos
-      match = fieldname.match(/^images_variants_(\d+)_videos$/);
-      if (match) {
-        const idx = Number(match[1]);
-        variantIndices.add(idx);
+          if (!media.images.variants[idx]) {
+            media.images.variants[idx] = { images: [], videos: [] };
+          }
 
-        if (!media.images.variants[idx]) {
-          media.images.variants[idx] = { images: [], videos: [] };
+          media.images.variants[idx].videos =
+            await this.cloudinaryService.uploadMultipleVideos(files[fieldname]);
         }
 
-        media.images.variants[idx].videos =
-          await this.cloudinaryService.uploadMultipleVideos(files[fieldname]);
-      }
+        // videos_variants_{i}_videos
+        match = fieldname.match(/^videos_variants_(\d+)_videos$/);
+        if (match) {
+          const idx = Number(match[1]);
+          variantIndices.add(idx);
 
-      // videos_variants_{i}_videos
-      match = fieldname.match(/^videos_variants_(\d+)_videos$/);
-      if (match) {
-        const idx = Number(match[1]);
-        variantIndices.add(idx);
+          if (!media.videos.variants[idx]) {
+            media.videos.variants[idx] = { videos: [] };
+          }
 
-        if (!media.videos.variants[idx]) {
-          media.videos.variants[idx] = { videos: [] };
+          media.videos.variants[idx].videos =
+            await this.cloudinaryService.uploadMultipleVideos(files[fieldname]);
         }
-
-        media.videos.variants[idx].videos =
-          await this.cloudinaryService.uploadMultipleVideos(files[fieldname]);
       }
-    }
 
-    /* =========================
-       NORMALIZE VARIANTS
-    ========================== */
-    const maxIndex =
-      variantIndices.size > 0 ? Math.max(...variantIndices) : -1;
+      /* =========================
+         NORMALIZE VARIANTS
+      ========================== */
+      const maxIndex =
+        variantIndices.size > 0 ? Math.max(...variantIndices) : -1;
 
-    for (let i = 0; i <= maxIndex; i++) {
-      if (!media.images.variants[i]) {
-        media.images.variants[i] = { images: [], videos: [] };
+      for (let i = 0; i <= maxIndex; i++) {
+        if (!media.images.variants[i]) {
+          media.images.variants[i] = { images: [], videos: [] };
+        }
+        if (!media.videos.variants[i]) {
+          media.videos.variants[i] = { videos: [] };
+        }
       }
-      if (!media.videos.variants[i]) {
-        media.videos.variants[i] = { videos: [] };
-      }
+    } else if (!media) {
+      // If no files uploaded and no media provided, require at least media
+      throw new BadRequestException('Either upload files or provide media URLs');
     }
 
     /* =========================
        SAVE LEATHER
     ========================== */
+    const { media: _, ...leatherData } = createLeatherDto;
     return this.leathersService.create({
-      ...createLeatherDto,
+      ...leatherData,
       media,
-    });
+    }, req.user.userId);
   }
 
   /* =========================
@@ -173,13 +186,19 @@ export class LeathersController {
   }
 
   @Get('category/:category')
-  @UseGuards()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   findByCategory(@Param('category') category: string) {
     return this.leathersService.findByCategory(category);
   }
 
+  @Get('upload-signature')
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  getUploadSignature() {
+    return this.cloudinaryService.generateUploadSignature('elegant-leather', 'auto');
+  }
+
   @Get(':id')
-  @UseGuards()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   findOne(@Param('id') id: string) {
     return this.leathersService.findOne(id);
   }
@@ -188,12 +207,14 @@ export class LeathersController {
      UPDATE
   ========================== */
   @Patch(':id')
-  // @UseGuards(JwtAuthGuard, SuperAdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(AnyFilesInterceptor({
     limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
   }))
   async update(
     @Param('id') id: string,
+    @Request() req,
     @Body()
     updateLeatherDto: Partial<{
       name: string;
@@ -249,7 +270,7 @@ export class LeathersController {
       // Update main video if provided
       if (files['videos_main'] && files['videos_main'].length > 0) {
         if (media.videos?.main) {
-          await this.cloudinaryService.deleteAsset(media.videos.main.public_id);
+          await this.cloudinaryService.deleteAsset(media.videos.main.public_id, 'video');
         }
         media.videos.main = await this.cloudinaryService.uploadVideo(
           files['videos_main'][0],
@@ -272,12 +293,12 @@ export class LeathersController {
             deletePromises.push(this.cloudinaryService.deleteAsset(img.public_id)),
           );
           variant.videos?.forEach((vid) =>
-            deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id)),
+            deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id, 'video')),
           );
         });
         media.videos?.variants?.forEach((variant) => {
           variant.videos?.forEach((vid) =>
-            deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id)),
+            deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id, 'video')),
           );
         });
         if (deletePromises.length > 0) {
@@ -352,59 +373,74 @@ export class LeathersController {
     const updateData = { ...updateLeatherDto };
     if (uploadedFiles && uploadedFiles.length > 0) {
       updateData.media = media;
+    } else if (updateLeatherDto.media) {
+      // If media URLs are provided in the body without files, use them directly
+      updateData.media = updateLeatherDto.media;
     }
 
-    return this.leathersService.update(id, updateData);
+    return this.leathersService.update(id, updateData, req.user.userId);
   }
 
   /* =========================
      DELETE
   ========================== */
   @Delete(':id')
-  // @UseGuards(JwtAuthGuard, SuperAdminGuard)
-  async remove(@Param('id') id: string) {
+  @UseGuards(JwtAuthGuard, AdminGuard)
+  async remove(@Param('id') id: string, @Request() req) {
+    console.log('DELETE endpoint called for leather ID:', id);
     const leather = await this.leathersService.findOne(id);
     if (!leather) {
       throw new NotFoundException('Leather not found');
     }
 
+    console.log('Leather found:', leather.name, 'Media:', leather.media);
+
     // Delete media from Cloudinary
     const deletePromises: Promise<any>[] = [];
 
     if (leather.media?.images?.main) {
+      console.log('Deleting main image:', leather.media.images.main.public_id);
       deletePromises.push(
         this.cloudinaryService.deleteAsset(leather.media.images.main.public_id),
       );
     }
 
-    leather.media?.images?.variants?.forEach((variant) => {
-      variant.images?.forEach((img) =>
-        deletePromises.push(this.cloudinaryService.deleteAsset(img.public_id)),
-      );
-      variant.videos?.forEach((vid) =>
-        deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id)),
-      );
+    leather.media?.images?.variants?.forEach((variant, index) => {
+      variant.images?.forEach((img, imgIndex) => {
+        console.log(`Deleting variant ${index} image ${imgIndex}:`, img.public_id);
+        deletePromises.push(this.cloudinaryService.deleteAsset(img.public_id));
+      });
+      variant.videos?.forEach((vid, vidIndex) => {
+        console.log(`Deleting variant ${index} video ${vidIndex}:`, vid.public_id);
+        deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id, 'video'));
+      });
     });
 
     if (leather.media?.videos?.main) {
+      console.log('Deleting main video:', leather.media.videos.main.public_id);
       deletePromises.push(
-        this.cloudinaryService.deleteAsset(leather.media.videos.main.public_id),
+        this.cloudinaryService.deleteAsset(leather.media.videos.main.public_id, 'video'),
       );
     }
 
-    leather.media?.videos?.variants?.forEach((variant) => {
-      variant.videos?.forEach((vid) =>
-        deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id)),
-      );
+    leather.media?.videos?.variants?.forEach((variant, index) => {
+      variant.videos?.forEach((vid, vidIndex) => {
+        console.log(`Deleting video variant ${index} video ${vidIndex}:`, vid.public_id);
+        deletePromises.push(this.cloudinaryService.deleteAsset(vid.public_id, 'video'));
+      });
     });
+
+    console.log('Total delete promises:', deletePromises.length);
 
     // Delete assets (ignore errors if any)
     if (deletePromises.length > 0) {
-      await Promise.allSettled(deletePromises);
+      const results = await Promise.allSettled(deletePromises);
+      console.log('Cloudinary delete results:', results);
     }
 
     // Delete from DB
-    await this.leathersService.remove(id);
+    await this.leathersService.remove(id, req.user.userId);
+    console.log('Leather deleted from database');
     return { message: 'Leather deleted successfully' };
   }
 }

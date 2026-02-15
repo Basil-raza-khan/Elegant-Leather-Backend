@@ -12,6 +12,7 @@ import {
   BadRequestException,
   HttpCode,
   HttpStatus,
+  Request,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TeamService } from './team.service';
@@ -25,12 +26,14 @@ export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
     }),
   )
   async create(
+    @Request() req,
     @Body() createTeamDto: CreateTeamDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -38,7 +41,7 @@ export class TeamController {
       throw new BadRequestException('Image file is required');
     }
 
-    return this.teamService.create(createTeamDto, file);
+    return this.teamService.create(req.user.userId, createTeamDto, file);
   }
 
   @Get()
@@ -52,7 +55,7 @@ export class TeamController {
   }
 
   @Patch(':id')
-//   @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @UseInterceptors(
     FileInterceptor('image', {
       limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
@@ -60,24 +63,25 @@ export class TeamController {
   )
   async update(
     @Param('id') id: string,
+    @Request() req,
     @Body() updateTeamDto: UpdateTeamDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    return this.teamService.update(id, updateTeamDto, file);
+    return this.teamService.update(req.user.userId, id, updateTeamDto, file);
   }
 
   @Delete(':id')
-//   @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  async remove(@Param('id') id: string) {
-    return this.teamService.remove(id);
+  async remove(@Param('id') id: string, @Request() req) {
+    return this.teamService.remove(req.user.userId, id);
   }
 
   @Delete(':id/permanent')
-//   @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @HttpCode(HttpStatus.OK)
-  async hardDelete(@Param('id') id: string) {
-    return this.teamService.hardDelete(id);
+  async hardDelete(@Param('id') id: string, @Request() req) {
+    return this.teamService.hardDelete(req.user.userId, id);
   }
 
   @Get('count/total')

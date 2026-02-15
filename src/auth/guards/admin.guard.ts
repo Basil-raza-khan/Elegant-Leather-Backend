@@ -6,6 +6,12 @@ export class AdminGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
-    return user && (user.role === UserRole.SUPER_ADMIN || user.role === UserRole.DEPT_ADMIN);
+    const role = user?.role;
+    return user && (
+      role === UserRole.SUPER_ADMIN || 
+      role === UserRole.DEPT_ADMIN || 
+      role === 'SUPER ADMIN' || 
+      role === 'DEPT ADMIN'
+    );
   }
 }

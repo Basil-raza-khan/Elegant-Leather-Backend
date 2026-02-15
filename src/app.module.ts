@@ -13,6 +13,8 @@ import { MediaModule } from './media/media.module';
 import { ContactUsModule } from './contact-us/contact-us.module';
 import { TeamModule } from './team/team.module';
 import { TestimonialsModule } from './testimonials/testimonials.module';
+import { LogsModule } from './logs/logs.module';
+import { AdminModule } from './admin/admin.module';
 import { databaseConfig } from './config/database.config';
 
 @Module({
@@ -29,6 +31,8 @@ import { databaseConfig } from './config/database.config';
     ContactUsModule,
     TeamModule,
     TestimonialsModule,
+    LogsModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
