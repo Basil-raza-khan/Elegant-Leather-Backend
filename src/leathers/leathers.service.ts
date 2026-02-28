@@ -14,6 +14,9 @@ export class LeathersService {
     async create(createLeatherDto: {
         name: string;
         description?: string;
+        inStock?: number;
+        ratings?: string;
+        reviewCount?: string;
         category: string;
         tags?: string[];
         media: any;
@@ -51,6 +54,9 @@ export class LeathersService {
     async update(id: string, updateLeatherDto: Partial<{
         name: string;
         description?: string;
+        inStock?: number;
+        ratings?: string;
+        reviewCount?: string;
         category: string;
         tags?: string[];
         media: any;

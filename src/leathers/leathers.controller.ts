@@ -214,6 +214,9 @@ export class LeathersController {
     updateLeatherDto: Partial<{
       name: string;
       description: string;
+      inStock?: number;
+      ratings?: string;
+      reviewCount?: string;
       category: string;
       tags: string[];
       media?: any;

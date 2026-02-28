@@ -29,11 +29,11 @@ export class Leather {
     @Prop()
     inStock: number;
 
-    @Prop({ default: 0 })
-    ratings: number;
+    @Prop({ default: "0" })
+    ratings: string;
 
-    @Prop({ default: 0 })
-    reviewCount: number;
+    @Prop({ default: "0" })
+    reviewCount: string;
 
     @Prop({ required: true })
     category: string;
