@@ -29,10 +29,23 @@ export class LeathersService {
         finish?: string;
         collections?: string;
     }, userId: string): Promise<Leather> {
-        const createdLeather = new this.leatherModel(createLeatherDto);
-        const savedLeather = await createdLeather.save();
-        await this.logsService.createLog('create', 'leather', (savedLeather._id as any).toString(), userId, null, (savedLeather as any).toObject());
-        return savedLeather;
+        try {
+            // console.log('Creating leather model with data:', createLeatherDto);
+            const createdLeather = new this.leatherModel(createLeatherDto);
+            // console.log('Leather model created, saving...');
+            const savedLeather = await createdLeather.save();
+            // console.log('Leather saved, creating log...');
+            const logResult = await this.logsService.createLog('create', 'leather', (savedLeather._id as any).toString(), userId, null, (savedLeather as any).toObject());
+            if (logResult) {
+                console.log('Log created successfully');
+            } else {
+                console.log('Log creation failed, but continuing');
+            }
+            return savedLeather;
+        } catch (error) {
+            console.error('Error in leather service create:', error);
+            throw error;
+        }
     }
 
     async count(): Promise<number> {

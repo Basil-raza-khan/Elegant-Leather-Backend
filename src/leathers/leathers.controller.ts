@@ -40,7 +40,7 @@ export class LeathersController {
   }
 
   @Post()
-  // @UseGuards(JwtAuthGuard, AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(AnyFilesInterceptor({
     limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
@@ -50,10 +50,15 @@ export class LeathersController {
     @Body() createLeatherDto: CreateLeatherDto,
     @UploadedFiles() uploadedFiles?: Express.Multer.File[],
   ) {
+    // console.log('Create leather request received');
+    // console.log('Uploaded files:', uploadedFiles ? uploadedFiles.length : 0);
+    // console.log('DTO media:', createLeatherDto.media);
+
     let media = createLeatherDto.media;
 
     // If files are uploaded, process them
     if (uploadedFiles && uploadedFiles.length > 0) {
+      console.log('Processing uploaded files');
       const files = this.groupFiles(uploadedFiles);
 
       media = {
@@ -154,19 +159,32 @@ export class LeathersController {
           media.videos.variants[i] = { videos: [] };
         }
       }
-    } else if (!media) {
-      // If no files uploaded and no media provided, require at least media
-      throw new BadRequestException('Either upload files or provide media URLs');
+    } else {
+      console.log('No files uploaded, using provided media URLs');
+      // If no files uploaded, media should be provided in the DTO
+      if (!media) {
+        throw new BadRequestException('Either upload files or provide media URLs');
+      }
     }
 
     /* =========================
        SAVE LEATHER
     ========================== */
     const { media: _, ...leatherData } = createLeatherDto;
-    return this.leathersService.create({
-      ...leatherData,
-      media,
-    }, req.user.userId);
+    // console.log('Final leather data:', { ...leatherData, media });
+    // console.log('User ID:', req.user?.userId);
+    
+    try {
+      const result = await this.leathersService.create({
+        ...leatherData,
+        media,
+      }, req.user.userId);
+      // console.log('Leather created successfully:', result._id);
+      return result;
+    } catch (error) {
+      console.error('Error creating leather:', error);
+      throw error;
+    }
   }
 
   /* =========================

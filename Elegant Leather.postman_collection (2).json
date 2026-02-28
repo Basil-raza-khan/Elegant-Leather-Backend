@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "310fcbed-85c5-424a-8eb9-279f28474c54",
+    "_postman_id": "f2fa32f4-5668-4e07-973c-8e87619e4a25",
     "name": "Elegant Leather",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "40106202"
@@ -24,13 +24,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:4000/auth/login",
+              "raw": "http://localhost:4000/api/auth/login",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "4000",
               "path": [
+                "api",
                 "auth",
                 "login"
               ]
@@ -53,13 +54,14 @@
               }
             },
             "url": {
-              "raw": "http://localhost:4000/auth/login",
+              "raw": "http://localhost:4000/API/auth/login",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "4000",
               "path": [
+                "API",
                 "auth",
                 "login"
               ]
@@ -75,16 +77,6 @@
         {
           "name": "create leather",
           "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            },
             "method": "POST",
             "header": [
               {
@@ -129,12 +121,14 @@
                 {
                   "key": "images_variants_0_images",
                   "type": "file",
-                  "src": "_-cCFsJQ5/front1.jpeg"
+                  "src": "_-cCFsJQ5/front1.jpeg",
+                  "disabled": true
                 },
                 {
                   "key": "images_variants_0_images",
                   "type": "file",
-                  "src": "yf4Ypz0WR/front2.jpeg"
+                  "src": "yf4Ypz0WR/front2.jpeg",
+                  "disabled": true
                 },
                 {
                   "key": "images[variants][0][videos][]",
@@ -145,7 +139,8 @@
                 {
                   "key": "videos_main",
                   "type": "file",
-                  "src": "aYCzvABVO/IMG_8121.MP4"
+                  "src": "aYCzvABVO/IMG_8121.MP4",
+                  "disabled": true
                 },
                 {
                   "key": "videos_variants_0_videos",
@@ -156,13 +151,56 @@
               ]
             },
             "url": {
-              "raw": "http://localhost:4000/leathers",
-              "protocol": "http",
+              "raw": "https://elegant-leather-backend.vercel.app/api/leathers",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "elegant-leather-backend",
+                "vercel",
+                "app"
               ],
-              "port": "4000",
               "path": [
+                "api",
+                "leathers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create leather with media URLs",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer <token>",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Clinton Alvarado\",\n    \"description\": \"Sunt cupidatat sit v\",\n    \"category\": \"Chrome-Tanned\",\n    \"tags\": [\"Ut omnis ad ab ut al\"],\n    \"ratings\": \"3\",\n    \"reviewCount\": \"0\",\n    \"weightRange\": \"Aut sit rem asperna\",\n    \"temper\": \"Est dolores culpa pr\",\n    \"oilContent\": \"Sit proident ut et \",\n    \"leatherType\": \"Excepteur reiciendis\",\n    \"texture\": \"Aliquam fuga Culpa \",\n    \"grading\": \"Commodi laborum perf\",\n    \"finish\": \"Quidem fugit nemo d\",\n    \"collections\": \"Harum sed velit temp\",\n    \"media\": {\n        \"images\": {\n            \"main\": {\n                \"public_id\": \"elegant-leather/minofkbef9xzgkom3bb9\",\n                \"url\": \"https://res.cloudinary.com/dwcb047e8/image/upload/v1772291534/elegant-leather/minofkbef9xzgkom3bb9.jpg\"\n            },\n            \"variants\": []\n        },\n        \"videos\": {\n            \"main\": {\n                \"public_id\": \"elegant-leather/boms6kewbplwzcnjwcn5\",\n                \"url\": \"https://res.cloudinary.com/dwcb047e8/video/upload/v1772291541/elegant-leather/boms6kewbplwzcnjwcn5.mp4\"\n            },\n            \"variants\": []\n        }\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://elegant-leather-backend.vercel.app/api/leathers",
+              "protocol": "https",
+              "host": [
+                "elegant-leather-backend",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
                 "leathers"
               ]
             }
@@ -243,13 +281,14 @@
               }
             ],
             "url": {
-              "raw": "http://localhost:4000/leathers/{{leatherId}}",
+              "raw": "http://localhost:4000/api/leathers/{{leatherId}}",
               "protocol": "http",
               "host": [
                 "localhost"
               ],
               "port": "4000",
               "path": [
+                "api",
                 "leathers",
                 "{{leatherId}}"
               ]
@@ -677,7 +716,7 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },
@@ -774,7 +813,7 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },
@@ -902,7 +941,7 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "src": "qV4djY8X6/AC.pdf"
                 }
               ]
             },
@@ -988,7 +1027,7 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },
@@ -1054,10 +1093,20 @@
         {
           "name": "get testimonials count",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:4000/api/testimonials/count/total",
+              "raw": "http://localhost:4000/api/admin/dashboard/counts",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1065,9 +1114,9 @@
               "port": "4000",
               "path": [
                 "api",
-                "testimonials",
-                "count",
-                "total"
+                "admin",
+                "dashboard",
+                "counts"
               ]
             }
           },
@@ -1104,12 +1153,12 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "value": null
                 },
                 {
                   "key": "video",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },
@@ -1195,12 +1244,12 @@
                 {
                   "key": "image",
                   "type": "file",
-                  "src": []
+                  "value": null
                 },
                 {
                   "key": "video",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },

@@ -17,15 +17,24 @@ export class LogsService {
     oldData?: any,
     newData?: any,
   ): Promise<Log> {
-    const log = new this.logModel({
-      action,
-      entityType,
-      entityId,
-      userId,
-      oldData,
-      newData,
-    });
-    return log.save();
+    try {
+      console.log('Creating log:', { action, entityType, entityId, userId });
+      const log = new this.logModel({
+        action,
+        entityType,
+        entityId,
+        userId,
+        oldData,
+        newData,
+      });
+      const savedLog = await log.save();
+      console.log('Log saved successfully');
+      return savedLog;
+    } catch (error) {
+      console.error('Error creating log:', error);
+      // Don't throw error for logging failures, just log it
+      return null as any;
+    }
   }
 
   async getLogs(page: number = 1, limit: number = 10): Promise<{ logs: Log[]; total: number }> {
