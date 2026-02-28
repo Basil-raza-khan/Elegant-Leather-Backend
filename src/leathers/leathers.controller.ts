@@ -40,7 +40,7 @@ export class LeathersController {
   }
 
   @Post()
-  @UseGuards(JwtAuthGuard, AdminGuard)
+  // @UseGuards(JwtAuthGuard, AdminGuard)
   @UsePipes(new ValidationPipe())
   @UseInterceptors(AnyFilesInterceptor({
     limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
