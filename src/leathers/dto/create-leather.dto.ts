@@ -13,13 +13,13 @@ export class CreateLeatherDto {
     @IsOptional()
     inStock?: number;
 
-    @IsNumber()
+    @IsString()
     @IsOptional()
-    ratings?: number;
+    ratings?: string;
 
-    @IsNumber()
+    @IsString()
     @IsOptional()
-    reviewCount?: number;
+    reviewCount?: string;
 
     @IsString()
     @IsNotEmpty()
