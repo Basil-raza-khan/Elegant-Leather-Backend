@@ -54,10 +54,6 @@ export class LeathersController {
 
     // If files are uploaded, process them
     if (uploadedFiles && uploadedFiles.length > 0) {
-      if (!uploadedFiles || uploadedFiles.length === 0) {
-        throw new BadRequestException('No files uploaded');
-      }
-
       const files = this.groupFiles(uploadedFiles);
 
       media = {
@@ -198,7 +194,6 @@ export class LeathersController {
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, AdminGuard)
   findOne(@Param('id') id: string) {
     return this.leathersService.findOne(id);
   }

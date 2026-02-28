@@ -30,7 +30,6 @@ export class CreateLeatherDto {
     @IsOptional()
     tags?: string[];
 
-    @IsObject()
     @IsOptional()
     media?: any;
 
